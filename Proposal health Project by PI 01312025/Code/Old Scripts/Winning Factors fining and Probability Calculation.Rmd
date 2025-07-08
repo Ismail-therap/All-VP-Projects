@@ -1,0 +1,153 @@
+---
+title: "Proposal winning prediction"
+author: "Md Ismail Hossain"
+date: "2025-02-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Step 1: Load Required Libraries
+
+
+```{r}
+# Load necessary libraries
+library(readr)      # For reading CSV files
+library(dplyr)      # For data manipulation
+library(readxl)     # For reading Excel files
+library(lubridate)  # For handling date-time conversions
+
+```
+
+# Step 2: Load and Process Proposal Data
+
+```{r}
+# Read the main Proposal Data file
+p_data <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Proposal_Data_All_2025_01_31(in).csv")
+View(p_data)
+
+# Read the Proposal Cost Data file
+Proposal_cost_data_all <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Proposal_cost_data_all.csv") %>%
+  select(-`Project Title`)  # Remove the "Project Title" column
+
+
+# Rename columns (except "Proposal #") by appending "in Proposal"
+colnames(Proposal_cost_data_all)[-1] <- paste0(colnames(Proposal_cost_data_all)[-1], " in Proposal")
+
+# Merge Proposal Data with Proposal Cost Data on "Proposal #"
+p_data <- left_join(p_data, Proposal_cost_data_all, by = "Proposal #")
+
+# Select relevant columns for further processing
+p_data_selected_columns <- p_data %>%
+  select(`Proposal #`, `Project Title`, `Created Date`, PI, `PI Unit`, 
+         `History Action`, `History Action Date`, `Status`, 
+         `Total Sponsor Costs in Proposal`, `Total Direct Costs in Proposal`, 
+         `Total Indirect Costs in Proposal`, `Total Project Cost in Proposal`) %>%
+  filter(!is.na(Status))  # Remove rows with missing Status
+```
+
+
+
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(lubridate)  # For handling datetime conversion
+
+# Create a new variable with broader categories
+p_data <- p_data %>%
+  mutate(History_Action_Category = case_when(
+    is.na(`History Action`) | `History Action` == "" ~ "Missing_Action",
+    grepl("Assigned to SP Proposal Administrator", `History Action`) ~ "Assigned to Administrator",
+    grepl("Unassigned from SP Proposal Administrator", `History Action`) ~ "Unassigned from Administrator",
+    grepl("Form was edited", `History Action`) ~ "Form Edited",
+    grepl("Proposal Created", `History Action`) ~ "Proposal Created",
+    grepl("Certified", `History Action`) ~ "Certified",
+    grepl("Status was changed.*Approved", `History Action`) ~ "Approved",
+    grepl("Status was changed.*Closed", `History Action`) ~ "Closed",
+    grepl("Status was changed.*Funded", `History Action`) ~ "Funded",
+    grepl("Status was changed.*In Development", `History Action`) ~ "In Development",
+    grepl("Status was changed.*Submitted to Sponsor", `History Action`) ~ "Submitted to Sponsor",
+    grepl("Status was changed.*Under Consideration", `History Action`) ~ "Under Consideration",
+    grepl("Status was changed.*Under Review", `History Action`) ~ "Under Review",
+    TRUE ~ "Other"
+  ))
+
+# Convert `History Action Date` to proper datetime format
+p_data <- p_data %>%
+  mutate(`History Action Date` = mdy_hm(`History Action Date`))  # Parses dates like "4/27/2023 18:28"
+
+# Reshape data: Create separate date columns for each action category
+p_data_wide <- p_data %>%
+  select(`Proposal #`, History_Action_Category, `History Action Date`) %>%
+  distinct() %>%
+  pivot_wider(names_from = History_Action_Category, values_from = `History Action Date`, 
+              values_fn = list(`History Action Date` = max))  # Use latest date for each category
+
+# Keep only the unique Proposal # and the newly created date columns
+p_data <- p_data %>%
+  select(-`History Action`, -`History Action Date`) %>%  # Remove original columns
+  distinct()
+
+# View the structure of the updated dataset
+str(p_data)
+
+# Check a few rows
+head(p_data)
+```
+
+```{r}
+# Load necessary library
+library(dplyr)
+
+# Create a new variable with broader categories
+p_data <- p_data %>%
+  mutate(History_Action_Category = case_when(
+    is.na(`History Action`) | `History Action` == "" ~ "Missing_Action",
+    grepl("Assigned to SP Proposal Administrator", `History Action`) ~ "Assigned to Administrator",
+    grepl("Unassigned from SP Proposal Administrator", `History Action`) ~ "Unassigned from Administrator",
+    grepl("Form was edited", `History Action`) ~ "Form Edited",
+    grepl("Proposal Created", `History Action`) ~ "Proposal Created",
+    grepl("Certified", `History Action`) ~ "Certified",
+    grepl("Status was changed.*Approved", `History Action`) ~ "Approved",
+    grepl("Status was changed.*Closed", `History Action`) ~ "Closed",
+    grepl("Status was changed.*Funded", `History Action`) ~ "Funded",
+    grepl("Status was changed.*In Development", `History Action`) ~ "In Development",
+    grepl("Status was changed.*Submitted to Sponsor", `History Action`) ~ "Submitted to Sponsor",
+    grepl("Status was changed.*Under Consideration", `History Action`) ~ "Under Consideration",
+    grepl("Status was changed.*Under Review", `History Action`) ~ "Under Review",
+    TRUE ~ "Other"
+  ))
+
+# Check the new variable distribution
+table(p_data$History_Action_Category)
+```
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+
+# Convert `History Action Date` to proper datetime format
+p_data <- p_data %>%
+  mutate(`History Action Date` = mdy_hm(`History Action Date`))  # Parses dates like "4/27/2023 18:28"
+
+# Reshape data: Create separate date columns for each action category
+p_data_wide <- p_data %>%
+  select(`Proposal #`, History_Action_Category, `History Action Date`) %>%
+  distinct() %>%
+  pivot_wider(names_from = History_Action_Category, values_from = `History Action Date`, 
+              values_fn = list(`History Action Date` = max))  # Use latest date for each category
+
+# Merge back with original dataset
+p_data <- left_join(p_data, p_data_wide, by = "Proposal #")
+
+# View the structure of the updated dataset
+str(p_data)
+
+# Check a few rows
+View(p_data)
+
+```
+

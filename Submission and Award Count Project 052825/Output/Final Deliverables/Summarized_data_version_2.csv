@@ -1,0 +1,347 @@
+College/Division,Quarter,Sponsor_Type_Grouped,Sponsor_Category,Applications_Submitted,Grants_Received,Funding_Rate,Amount_Requested,Amount_Received
+Academic Affairs,Q1 FY2024,Federal,Others,1,1,100,263900,263900
+Academic Affairs,Q1 FY2024,State,Others,1,1,100,7200,7200
+Academic Affairs,Q2 FY2024,Federal,HHS (other than NIH),1,1,100,45426,45426
+Academic Affairs,Q2 FY2024,Federal,Others,1,0,0,1767950,0
+Academic Affairs,Q2 FY2024,Non-profit,Others,1,1,100,4125,4125
+Academic Affairs,Q2 FY2024,State,Others,1,1,100,513129,513129
+Academic Affairs,Q3 FY2024,Federal,Others,1,0,0,149939,0
+Academic Affairs,Q3 FY2024,Non-profit,Others,5,0,0,1069864,0
+Academic Affairs,Q4 FY2024,Federal,HHS (other than NIH),1,0,0,500000,0
+Academic Affairs,Q4 FY2024,Federal,Others,3,1,33.3,33602709,149939
+Academic Affairs,Q4 FY2024,Non-profit,Others,1,0,0,48610,0
+Academic Affairs,Q4 FY2024,State,Others,2,0,0,16500,0
+Academic Affairs,Q1 FY2025,Federal,Others,1,1,100,234908,28135968
+Academic Affairs,Q1 FY2025,State,Others,0,1,,0,6500
+Academic Affairs,Q2 FY2025,Federal,Others,1,2,200,249710,1802950
+Academic Affairs,Q2 FY2025,Non-profit,Others,1,0,0,2825,0
+Academic Affairs,Q2 FY2025,State,Others,1,1,100,10035,10035
+Academic Affairs,Q3 FY2025,Federal,HHS (other than NIH),1,0,0,2350186,0
+Academic Affairs,Q3 FY2025,Non-profit,Others,1,0,0,10000,0
+Academic Affairs,Q3 FY2025,State,Others,3,2,66.7,47500,41000
+Agriculture,Q1 FY2024,Business,Others,4,2,50,1119862,15500
+Agriculture,Q1 FY2024,Federal,NIH,5,2,40,15081814,12171126
+Agriculture,Q1 FY2024,Federal,NSF,6,3,50,2990315,1474641
+Agriculture,Q1 FY2024,Federal,Others,28,18,64.3,7818022,3887305
+Agriculture,Q1 FY2024,Federal,USDA-NIFA,4,0,0,1199921,0
+Agriculture,Q1 FY2024,Non-profit,Others,13,7,53.8,1480827,556994
+Agriculture,Q1 FY2024,Others,Others,3,2,66.7,293129,194995
+Agriculture,Q1 FY2024,State,Others,21,19,90.5,5196696,2472516
+Agriculture,Q2 FY2024,Business,Others,1,0,0,112500,0
+Agriculture,Q2 FY2024,Federal,NIH,1,1,100,1806250,397375
+Agriculture,Q2 FY2024,Federal,NSF,4,0,0,2514918,0
+Agriculture,Q2 FY2024,Federal,Others,10,5,50,1439833,1877335
+Agriculture,Q2 FY2024,Federal,USDA-NIFA,8,1,12.5,3432036,649943
+Agriculture,Q2 FY2024,Non-profit,Others,4,1,25,95544,1750
+Agriculture,Q2 FY2024,Others,Others,6,0,0,3659569,0
+Agriculture,Q2 FY2024,State,Others,9,8,88.9,563665,2556454
+Agriculture,Q3 FY2024,Business,Others,4,2,50,306572,146193
+Agriculture,Q3 FY2024,Federal,DOE,1,0,0,399024,0
+Agriculture,Q3 FY2024,Federal,NIH,3,1,33.3,3366531,397375
+Agriculture,Q3 FY2024,Federal,NSF,11,0,0,11052524,0
+Agriculture,Q3 FY2024,Federal,Others,17,1,5.9,4903193,1000000
+Agriculture,Q3 FY2024,Federal,USDA-NIFA,6,6,100,3944602,4067684
+Agriculture,Q3 FY2024,Non-profit,Others,26,10,38.5,1386743,409675
+Agriculture,Q3 FY2024,Others,Others,4,3,75,627703,120117
+Agriculture,Q3 FY2024,State,Others,25,3,12,1223611,752500
+Agriculture,Q4 FY2024,Business,Others,4,4,100,90200,395265
+Agriculture,Q4 FY2024,Federal,NIH,1,0,0,1762791,0
+Agriculture,Q4 FY2024,Federal,NSF,8,0,0,15065257,0
+Agriculture,Q4 FY2024,Federal,Others,14,6,42.9,4935909,904627
+Agriculture,Q4 FY2024,Federal,USDA-NIFA,3,2,66.7,1244097,292258
+Agriculture,Q4 FY2024,Non-profit,Others,4,5,125,486961,141132
+Agriculture,Q4 FY2024,Others,Others,6,1,16.7,1703064,5015
+Agriculture,Q4 FY2024,State,Others,5,7,140,276661,260450
+Agriculture,Q1 FY2025,Business,Others,3,5,166.7,95913,73650
+Agriculture,Q1 FY2025,Federal,NSF,5,5,100,3532999,3488210
+Agriculture,Q1 FY2025,Federal,Others,9,11,122.2,1738321,2013243
+Agriculture,Q1 FY2025,Federal,USDA-NIFA,5,5,100,3327188,1501619
+Agriculture,Q1 FY2025,Non-profit,Others,9,6,66.7,1293953,790000
+Agriculture,Q1 FY2025,Others,Others,3,2,66.7,1475960,39179
+Agriculture,Q1 FY2025,State,Others,1,13,1300,2230282,576118
+Agriculture,Q1 FY2025,Federal,NIH,0,2,,0,4367209
+Agriculture,Q2 FY2025,Business,Others,1,1,100,30000,24000
+Agriculture,Q2 FY2025,Federal,NIH,8,1,12.5,10562115,24711
+Agriculture,Q2 FY2025,Federal,NSF,4,0,0,1347280,0
+Agriculture,Q2 FY2025,Federal,Others,7,4,57.1,1598502,415579
+Agriculture,Q2 FY2025,Federal,USDA-NIFA,4,3,75,2002944,2100588
+Agriculture,Q2 FY2025,Non-profit,Others,7,3,42.9,289588,18095
+Agriculture,Q2 FY2025,Others,Others,6,2,33.3,1813621,81479
+Agriculture,Q2 FY2025,State,Others,5,3,60,685214,2504530
+Agriculture,Q3 FY2025,Business,Others,4,2,50,736616,37350
+Agriculture,Q3 FY2025,Federal,NIH,13,0,0,28941217,0
+Agriculture,Q3 FY2025,Federal,NSF,8,1,12.5,3664921,170825
+Agriculture,Q3 FY2025,Federal,Others,5,0,0,2589779,0
+Agriculture,Q3 FY2025,Non-profit,Others,25,4,16,2046836,34521
+Agriculture,Q3 FY2025,Others,Others,5,1,20,559275,56725
+Agriculture,Q3 FY2025,State,Others,22,2,9.1,743206,100894
+Arts & Sciences,Q1 FY2024,Federal,NSF,2,1,50,792989,697328
+Arts & Sciences,Q1 FY2024,Federal,Others,2,0,0,183966,0
+Arts & Sciences,Q1 FY2024,Non-profit,Others,3,2,66.7,688179,686679
+Arts & Sciences,Q1 FY2024,Others,Others,1,1,100,142520,142520
+Arts & Sciences,Q1 FY2024,State,Others,6,3,50,1048000,968000
+Arts & Sciences,Q2 FY2024,Business,Others,1,0,0,5000,0
+Arts & Sciences,Q2 FY2024,Federal,Others,1,1,100,349000,654502
+Arts & Sciences,Q2 FY2024,Non-profit,Others,3,3,100,39964,13324
+Arts & Sciences,Q3 FY2024,Federal,HHS (other than NIH),1,0,0,5000000,0
+Arts & Sciences,Q3 FY2024,Federal,NIH,1,0,0,19954,0
+Arts & Sciences,Q3 FY2024,Federal,Others,5,0,0,979498,0
+Arts & Sciences,Q3 FY2024,Non-profit,Others,4,3,75,916500,851500
+Arts & Sciences,Q3 FY2024,Others,Others,2,0,0,116051,0
+Arts & Sciences,Q3 FY2024,State,Others,2,1,50,24850,30000
+Arts & Sciences,Q3 FY2024,Business,Others,0,1,,0,5000
+Arts & Sciences,Q4 FY2024,Federal,HHS (other than NIH),1,1,100,999610,5000000
+Arts & Sciences,Q4 FY2024,Federal,NSF,1,0,0,159000,0
+Arts & Sciences,Q4 FY2024,Federal,Others,3,0,0,354409,0
+Arts & Sciences,Q4 FY2024,Non-profit,Others,2,2,100,300883,66500
+Arts & Sciences,Q4 FY2024,State,Others,1,0,0,54000,0
+Arts & Sciences,Q1 FY2025,Federal,Others,2,4,200,1382087,585406
+Arts & Sciences,Q1 FY2025,Non-profit,Others,3,3,100,53461,31640
+Arts & Sciences,Q1 FY2025,State,Others,1,2,200,15000,25000
+Arts & Sciences,Q1 FY2025,Federal,NSF,0,2,,0,254661
+Arts & Sciences,Q2 FY2025,Federal,Others,1,0,0,179332,0
+Arts & Sciences,Q2 FY2025,Non-profit,Others,1,0,0,1,0
+Arts & Sciences,Q2 FY2025,Others,Others,1,0,0,10000,0
+Arts & Sciences,Q2 FY2025,State,Others,0,1,,0,54000
+Arts & Sciences,Q3 FY2025,Federal,Others,1,0,0,786419,0
+Arts & Sciences,Q3 FY2025,Non-profit,Others,4,2,50,85725,7000
+Arts & Sciences,Q3 FY2025,State,Others,3,0,0,31000,0
+Business,Q1 FY2024,Business,Others,1,1,100,14606,14606
+Business,Q1 FY2024,Federal,Others,2,0,0,471573,0
+Business,Q1 FY2024,State,Others,1,1,100,185670,185670
+Business,Q2 FY2024,Business,Others,1,1,100,20100,20100
+Business,Q2 FY2024,Federal,Others,1,0,0,87133,0
+Business,Q2 FY2024,Non-profit,Others,3,3,100,69600,69600
+Business,Q2 FY2024,Others,Others,1,0,0,50000,0
+Business,Q2 FY2024,State,Others,3,1,33.3,778409,18000
+Business,Q3 FY2024,Business,Others,3,1,33.3,54940,20100
+Business,Q3 FY2024,Federal,Others,1,1,100,150989,155000
+Business,Q3 FY2024,Others,Others,1,1,100,280510,50000
+Business,Q3 FY2024,State,Others,1,3,300,3000,763409
+Business,Q4 FY2024,Non-profit,Others,3,1,33.3,26801,6700
+Business,Q1 FY2025,Non-profit,Others,1,3,300,20100,40201
+Business,Q1 FY2025,Others,Others,2,0,0,170208,0
+Business,Q1 FY2025,Business,Others,0,1,,0,35055
+Business,Q1 FY2025,Federal,Others,0,1,,0,87133
+Business,Q2 FY2025,Federal,NSF,1,0,0,187476,0
+Business,Q2 FY2025,Business,Others,0,2,,0,34840
+Business,Q2 FY2025,Others,Others,0,1,,0,100000
+Business,Q3 FY2025,Federal,NSF,0,1,,0,187476
+Campus Operations,Q1 FY2024,State,Others,2,2,100,4380082,4380082
+Campus Operations,Q2 FY2024,State,Others,5,5,100,666052,666052
+Campus Operations,Q3 FY2024,Non-profit,Others,1,1,100,305,305
+Campus Operations,Q4 FY2024,State,Others,2,0,0,3002705,0
+Education,Q1 FY2024,Federal,Others,1,0,0,250435,0
+Education,Q1 FY2024,State,Others,2,1,50,111800,16800
+Education,Q2 FY2024,Federal,NSF,1,0,0,575758,0
+Education,Q2 FY2024,Federal,Others,2,0,0,2346389,0
+Education,Q4 FY2024,Federal,HHS (other than NIH),1,0,0,96517,0
+Education,Q4 FY2024,State,Others,2,1,50,314845,94000
+Education,Q1 FY2025,Federal,Others,1,1,100,499936,250435
+Education,Q1 FY2025,Non-profit,Others,2,0,0,99980,0
+Education,Q1 FY2025,State,Others,1,2,200,175000,395845
+Education,Q1 FY2025,Federal,HHS (other than NIH),0,1,,0,96517
+Education,Q2 FY2025,Federal,NSF,1,0,0,1190654,0
+Education,Q2 FY2025,Non-profit,Others,1,0,0,50000,0
+Education,Q2 FY2025,Others,Others,2,0,0,1364114,0
+Education,Q2 FY2025,State,Others,0,1,,0,95000
+Education,Q3 FY2025,Federal,NSF,1,0,0,346246,0
+Education,Q3 FY2025,Non-profit,Others,1,1,100,478900,50000
+Engineering,Q1 FY2024,Business,Others,7,2,28.6,1051781,185689
+Engineering,Q1 FY2024,Federal,DOE,3,2,66.7,1936131,1436131
+Engineering,Q1 FY2024,Federal,NSF,17,5,29.4,9953944,1986799
+Engineering,Q1 FY2024,Federal,Others,29,5,17.2,9267604,1010875
+Engineering,Q1 FY2024,Non-profit,Others,4,2,50,160900,10900
+Engineering,Q1 FY2024,Others,Others,4,1,25,1881402,350000
+Engineering,Q1 FY2024,State,Others,8,7,87.5,2125183,2095150
+Engineering,Q2 FY2024,Business,Others,2,1,50,86243,22500
+Engineering,Q2 FY2024,Federal,DOE,5,1,20,6754605,2955954
+Engineering,Q2 FY2024,Federal,NSF,14,1,7.1,10114179,300000
+Engineering,Q2 FY2024,Federal,Others,21,5,23.8,5897903,1318011
+Engineering,Q2 FY2024,Non-profit,Others,3,0,0,685873,0
+Engineering,Q2 FY2024,Others,Others,5,0,0,719879,0
+Engineering,Q2 FY2024,State,Others,6,3,50,513966,100748
+Engineering,Q3 FY2024,Business,Others,9,2,22.2,1126232,226276
+Engineering,Q3 FY2024,Federal,DOE,15,0,0,14395493,0
+Engineering,Q3 FY2024,Federal,NSF,15,3,20,10002783,1849536
+Engineering,Q3 FY2024,Federal,Others,38,3,7.9,11654789,845683
+Engineering,Q3 FY2024,Non-profit,Others,2,1,50,126825,25000
+Engineering,Q3 FY2024,Others,Others,5,0,0,3941219,0
+Engineering,Q3 FY2024,State,Others,4,0,0,619327,0
+Engineering,Q4 FY2024,Business,Others,5,2,40,280517,18444
+Engineering,Q4 FY2024,Federal,DOE,1,0,0,3199609,0
+Engineering,Q4 FY2024,Federal,NIH,1,0,0,1806250,0
+Engineering,Q4 FY2024,Federal,NSF,14,2,14.3,7877118,648773
+Engineering,Q4 FY2024,Federal,Others,14,4,28.6,3432153,370090
+Engineering,Q4 FY2024,Non-profit,Others,4,1,25,108913,2150
+Engineering,Q4 FY2024,Others,Others,4,0,0,373210,0
+Engineering,Q4 FY2024,State,Others,4,1,25,254239,164138
+Engineering,Q1 FY2025,Business,Others,3,5,166.7,435012,555080
+Engineering,Q1 FY2025,Federal,NSF,8,7,87.5,3395487,5933316
+Engineering,Q1 FY2025,Federal,Others,16,12,75,8774367,1415431
+Engineering,Q1 FY2025,Federal,USDA-NIFA,1,0,0,225000,0
+Engineering,Q1 FY2025,Non-profit,Others,8,2,25,1762077,71763
+Engineering,Q1 FY2025,Others,Others,5,3,60,1019251,359893
+Engineering,Q1 FY2025,State,Others,1,3,300,300000,493658
+Engineering,Q1 FY2025,Federal,DOE,0,2,,0,1850407
+Engineering,Q2 FY2025,Business,Others,6,5,83.3,1334494,724514
+Engineering,Q2 FY2025,Federal,DOE,3,0,0,2549512,0
+Engineering,Q2 FY2025,Federal,NSF,22,1,4.5,13470626,299999
+Engineering,Q2 FY2025,Federal,Others,12,5,41.7,4227500,1100516
+Engineering,Q2 FY2025,Federal,USDA-NIFA,4,0,0,1155613,0
+Engineering,Q2 FY2025,Non-profit,Others,1,0,0,120000,0
+Engineering,Q2 FY2025,Others,Others,11,2,18.2,3726629,937500
+Engineering,Q2 FY2025,State,Others,1,1,100,40000,40000
+Engineering,Q3 FY2025,Business,Others,7,2,28.6,599824,330282
+Engineering,Q3 FY2025,Federal,DOE,7,1,14.3,10424375,2297763
+Engineering,Q3 FY2025,Federal,NIH,1,0,0,1644892,0
+Engineering,Q3 FY2025,Federal,NSF,10,0,0,8258953,0
+Engineering,Q3 FY2025,Federal,Others,12,0,0,4483328,0
+Engineering,Q3 FY2025,Non-profit,Others,5,1,20,500234,4000
+Engineering,Q3 FY2025,Others,Others,11,3,27.3,2836611,301006
+Engineering,Q3 FY2025,State,Others,3,3,100,505043,505043
+Haub School of Environment & tural Resources,Q1 FY2024,Business,Others,1,0,0,25000,0
+Haub School of Environment & tural Resources,Q1 FY2024,Federal,Others,4,4,100,241609,241609
+Haub School of Environment & tural Resources,Q1 FY2024,Non-profit,Others,2,1,50,288258,20748
+Haub School of Environment & tural Resources,Q1 FY2024,Others,Others,1,0,0,125646,0
+Haub School of Environment & tural Resources,Q1 FY2024,State,Others,7,5,71.4,308867,266867
+Haub School of Environment & tural Resources,Q2 FY2024,Federal,NSF,1,0,0,749851,0
+Haub School of Environment & tural Resources,Q2 FY2024,Non-profit,Others,6,5,83.3,180000,342510
+Haub School of Environment & tural Resources,Q2 FY2024,State,Others,5,2,40,214680,44000
+Haub School of Environment & tural Resources,Q3 FY2024,Federal,Others,7,3,42.9,2701760,1027196
+Haub School of Environment & tural Resources,Q3 FY2024,Non-profit,Others,1,2,200,22565,105000
+Haub School of Environment & tural Resources,Q3 FY2024,Others,Others,1,0,0,999995,0
+Haub School of Environment & tural Resources,Q3 FY2024,State,Others,12,6,50,555440,197120
+Haub School of Environment & tural Resources,Q4 FY2024,Federal,NSF,1,0,0,1351998,0
+Haub School of Environment & tural Resources,Q4 FY2024,Federal,Others,1,1,100,55000,611295
+Haub School of Environment & tural Resources,Q4 FY2024,Non-profit,Others,4,1,25,105000,22565
+Haub School of Environment & tural Resources,Q4 FY2024,State,Others,3,7,233.3,151666,456666
+Haub School of Environment & tural Resources,Q1 FY2025,Federal,Others,3,3,100,1489848,544601
+Haub School of Environment & tural Resources,Q1 FY2025,Non-profit,Others,2,4,200,242000,105000
+Haub School of Environment & tural Resources,Q1 FY2025,State,Others,2,4,200,207138,244638
+Haub School of Environment & tural Resources,Q1 FY2025,Federal,NSF,0,1,,0,749851
+Haub School of Environment & tural Resources,Q2 FY2025,Federal,Others,2,1,50,22744904,275000
+Haub School of Environment & tural Resources,Q2 FY2025,Non-profit,Others,3,1,33.3,626109,92000
+Haub School of Environment & tural Resources,Q2 FY2025,Others,Others,1,2,200,197248,322894
+Haub School of Environment & tural Resources,Q2 FY2025,Business,Others,0,1,,0,25000
+Haub School of Environment & tural Resources,Q2 FY2025,State,Others,0,3,,0,137500
+Haub School of Environment & tural Resources,Q3 FY2025,Federal,NSF,2,0,0,4211858,0
+Haub School of Environment & tural Resources,Q3 FY2025,Federal,Others,1,0,0,150000,0
+Haub School of Environment & tural Resources,Q3 FY2025,Non-profit,Others,3,0,0,467591,0
+Haub School of Environment & tural Resources,Q3 FY2025,State,Others,12,3,25,820725,192096
+Health Sciences,Q1 FY2024,Federal,HHS (other than NIH),2,0,0,11996421,0
+Health Sciences,Q1 FY2024,Federal,Others,5,0,0,4595638,0
+Health Sciences,Q1 FY2024,Non-profit,Others,2,1,50,21052,9997
+Health Sciences,Q1 FY2024,Others,Others,5,3,60,496083,801441
+Health Sciences,Q1 FY2024,State,Others,2,0,0,991337,0
+Health Sciences,Q2 FY2024,Federal,HHS (other than NIH),1,0,0,5000000,0
+Health Sciences,Q2 FY2024,Federal,NIH,5,0,0,16835293,0
+Health Sciences,Q2 FY2024,Federal,NSF,1,0,0,159000,0
+Health Sciences,Q2 FY2024,Non-profit,Others,2,0,0,63900,0
+Health Sciences,Q2 FY2024,Others,Others,1,0,0,375000,0
+Health Sciences,Q2 FY2024,State,Others,1,0,0,151875,0
+Health Sciences,Q3 FY2024,Federal,NIH,3,1,33.3,817799,66000
+Health Sciences,Q3 FY2024,Federal,Others,6,1,16.7,460579,19999
+Health Sciences,Q3 FY2024,Non-profit,Others,7,1,14.3,879455,18500
+Health Sciences,Q3 FY2024,Others,Others,4,2,50,319205,79695
+Health Sciences,Q3 FY2024,State,Others,7,3,42.9,624983,244607
+Health Sciences,Q4 FY2024,Federal,NIH,2,0,0,2501019,0
+Health Sciences,Q4 FY2024,Non-profit,Others,1,0,0,5000,0
+Health Sciences,Q4 FY2024,Others,Others,4,1,25,2522292,44428
+Health Sciences,Q4 FY2024,State,Others,3,2,66.7,92857,33500
+Health Sciences,Q1 FY2025,Federal,HHS (other than NIH),1,1,100,2169921,5000000
+Health Sciences,Q1 FY2025,Federal,NIH,1,2,200,340000,2644562
+Health Sciences,Q1 FY2025,Non-profit,Others,4,2,50,91075,17825
+Health Sciences,Q1 FY2025,Others,Others,5,0,0,2146350,0
+Health Sciences,Q1 FY2025,State,Others,1,1,100,179255,179255
+Health Sciences,Q1 FY2025,Federal,Others,0,2,,0,188501
+Health Sciences,Q2 FY2025,Federal,NIH,2,1,50,407672,21675
+Health Sciences,Q2 FY2025,Federal,Others,1,1,100,195561,80392
+Health Sciences,Q2 FY2025,Non-profit,Others,3,3,100,513971,129426
+Health Sciences,Q2 FY2025,Others,Others,4,2,50,876311,53651
+Health Sciences,Q2 FY2025,State,Others,0,1,,0,151875
+Health Sciences,Q3 FY2025,Business,Others,1,0,0,115759,0
+Health Sciences,Q3 FY2025,Federal,HHS (other than NIH),2,0,0,20338978,0
+Health Sciences,Q3 FY2025,Federal,NIH,3,0,0,737772,0
+Health Sciences,Q3 FY2025,Federal,Others,1,0,0,1649262,0
+Health Sciences,Q3 FY2025,Non-profit,Others,6,1,16.7,524688,1000
+Health Sciences,Q3 FY2025,Others,Others,1,1,100,197541,65107
+Health Sciences,Q3 FY2025,State,Others,2,0,0,146767,0
+Law,Q1 FY2025,State,Others,1,1,100,15000,15000
+Research & Economic Development,Q1 FY2024,Federal,DOE,1,0,0,1000000,0
+Research & Economic Development,Q1 FY2024,Federal,NSF,1,0,0,5312072,0
+Research & Economic Development,Q1 FY2024,Federal,Others,24,16,66.7,6222449,3248063
+Research & Economic Development,Q1 FY2024,Federal,USDA-NIFA,1,0,0,224912,0
+Research & Economic Development,Q1 FY2024,Non-profit,Others,1,1,100,10630,10630
+Research & Economic Development,Q1 FY2024,State,Others,10,7,70,1887289,1673146
+Research & Economic Development,Q2 FY2024,Business,Others,1,1,100,955000,955000
+Research & Economic Development,Q2 FY2024,Federal,Others,7,6,85.7,1335773,576830
+Research & Economic Development,Q2 FY2024,Non-profit,Others,3,1,33.3,3539998,35000
+Research & Economic Development,Q2 FY2024,Others,Others,1,1,100,750000,750000
+Research & Economic Development,Q2 FY2024,State,Others,4,3,75,2246204,2288901
+Research & Economic Development,Q2 FY2024,Federal,NSF,0,1,,0,5312072
+Research & Economic Development,Q3 FY2024,Federal,NSF,2,0,0,15405851,0
+Research & Economic Development,Q3 FY2024,Federal,Others,15,3,20,2488732,2184037
+Research & Economic Development,Q3 FY2024,Non-profit,Others,7,1,14.3,7010191,4998
+Research & Economic Development,Q3 FY2024,Others,Others,2,0,0,2343,0
+Research & Economic Development,Q3 FY2024,State,Others,12,3,25,814552,299645
+Research & Economic Development,Q4 FY2024,Business,Others,1,1,100,450000,450000
+Research & Economic Development,Q4 FY2024,Federal,HHS (other than NIH),1,0,0,3289745,0
+Research & Economic Development,Q4 FY2024,Federal,NIH,1,0,0,1560157,0
+Research & Economic Development,Q4 FY2024,Federal,Others,7,5,71.4,784507,714306
+Research & Economic Development,Q4 FY2024,Non-profit,Others,6,5,83.3,273496,221559
+Research & Economic Development,Q4 FY2024,Others,Others,2,2,100,599238,0
+Research & Economic Development,Q4 FY2024,State,Others,5,4,80,1038571,117221
+Research & Economic Development,Q4 FY2024,Federal,DOE,0,1,,0,1000000
+Research & Economic Development,Q1 FY2025,Business,Others,1,1,100,15000000,15000000
+Research & Economic Development,Q1 FY2025,Federal,NIH,1,0,0,347012,0
+Research & Economic Development,Q1 FY2025,Federal,Others,8,8,100,1208968,854663
+Research & Economic Development,Q1 FY2025,Non-profit,Others,2,3,150,149236,81710
+Research & Economic Development,Q1 FY2025,Others,Others,1,1,100,5000,5000
+Research & Economic Development,Q1 FY2025,State,Others,5,8,160,940739,1184983
+Research & Economic Development,Q1 FY2025,Federal,HHS (other than NIH),0,1,,0,3289745
+Research & Economic Development,Q2 FY2025,Federal,Others,4,4,100,2915550,911404
+Research & Economic Development,Q2 FY2025,Non-profit,Others,1,1,100,0,0
+Research & Economic Development,Q2 FY2025,State,Others,5,1,20,205828,240000
+Research & Economic Development,Q3 FY2025,Business,Others,2,1,50,199848,10218
+Research & Economic Development,Q3 FY2025,Federal,NSF,1,2,200,2076882,2482733
+Research & Economic Development,Q3 FY2025,Federal,Others,3,2,66.7,1031692,934808
+Research & Economic Development,Q3 FY2025,Non-profit,Others,4,1,25,703822,3500000
+Research & Economic Development,Q3 FY2025,Others,Others,1,0,0,5000,0
+Research & Economic Development,Q3 FY2025,State,Others,4,0,0,155753,0
+School of Energy Resources,Q1 FY2024,Federal,DOE,3,1,33.3,17705954,300000
+School of Energy Resources,Q1 FY2024,Federal,Others,1,0,0,2500006,0
+School of Energy Resources,Q1 FY2024,Non-profit,Others,2,1,50,61655,43831
+School of Energy Resources,Q1 FY2024,Others,Others,2,2,100,154180,154180
+School of Energy Resources,Q1 FY2024,State,Others,1,0,0,842484,0
+School of Energy Resources,Q2 FY2024,Federal,DOE,3,0,0,11899073,0
+School of Energy Resources,Q2 FY2024,Federal,Others,4,1,25,1630216,179905
+School of Energy Resources,Q2 FY2024,Others,Others,1,1,100,412375,412375
+School of Energy Resources,Q2 FY2024,Non-profit,Others,0,1,,0,17824
+School of Energy Resources,Q3 FY2024,Business,Others,2,0,0,533000,0
+School of Energy Resources,Q3 FY2024,Federal,DOE,2,1,50,5726236,998968
+School of Energy Resources,Q3 FY2024,Federal,NSF,1,0,0,423030,0
+School of Energy Resources,Q3 FY2024,Federal,Others,2,0,0,977318,0
+School of Energy Resources,Q3 FY2024,Non-profit,Others,1,1,100,604833,604833
+School of Energy Resources,Q3 FY2024,Others,Others,1,0,0,50000,0
+School of Energy Resources,Q3 FY2024,State,Others,2,0,0,3450000,0
+School of Energy Resources,Q4 FY2024,Business,Others,1,0,0,300000,0
+School of Energy Resources,Q4 FY2024,Federal,DOE,2,2,100,9499750,13407446
+School of Energy Resources,Q4 FY2024,Federal,Others,2,0,0,184975,0
+School of Energy Resources,Q4 FY2024,Non-profit,Others,1,0,0,558617,0
+School of Energy Resources,Q4 FY2024,State,Others,1,0,0,2750000,0
+School of Energy Resources,Q4 FY2024,Others,Others,0,1,,0,50000
+School of Energy Resources,Q1 FY2025,Business,Others,3,1,33.3,323029,197916
+School of Energy Resources,Q1 FY2025,Federal,DOE,2,1,50,4146094,8998257
+School of Energy Resources,Q1 FY2025,Federal,Others,2,2,100,228886,649823
+School of Energy Resources,Q1 FY2025,State,Others,0,2,,0,2900000
+School of Energy Resources,Q2 FY2025,Business,Others,1,4,400,1,424622
+School of Energy Resources,Q2 FY2025,Federal,DOE,2,0,0,19627822,0
+School of Energy Resources,Q2 FY2025,Federal,Others,1,1,100,206000,206000
+School of Energy Resources,Q2 FY2025,Others,Others,3,2,66.7,795635,186429
+School of Energy Resources,Q3 FY2025,Business,Others,1,2,200,506942,532434
+School of Energy Resources,Q3 FY2025,Federal,Others,1,0,0,2051748,0
+School of Energy Resources,Q3 FY2025,Non-profit,Others,1,1,100,54356,54356
+School of Energy Resources,Q3 FY2025,Others,Others,1,0,0,1925000,0
+School of Energy Resources,Q3 FY2025,State,Others,6,3,50,1916507,347687
+Student Affairs,Q4 FY2024,Federal,Others,1,0,0,520250,0

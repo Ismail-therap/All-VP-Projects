@@ -1,0 +1,92 @@
+---
+title: "PI proposal submission tracking"
+author: "Md Ismail Hossain"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+\newpage
+
+## PI's FSU, Proposal submission and Award tracking
+
+This report presents a detailed review of faculty startup (FSU) allocations, proposal submission activity, and award outcomes for principal investigators (PIs) hired between FY2020 and FY2025 at the University of Wyoming. The primary objective is to assess how effectively startup investments are translating into research proposal submissions and external funding success. Metrics include the number of active PIs, total proposals submitted, awarded projects, and time to first submission—especially with respect to federal funding targets. These insights support strategic planning around faculty research development.
+
+
+## Summary:
+
+
+Over the six-year period analyzed, 116 newly hired PIs were tracked. Among them, 86 submitted at least one research proposal, contributing to a total of 272 submissions and 60 successful awards. A total of **$17.81 million** in faculty startup funding was allocated, which has led to **$12.48 million** in awarded external research funding. Encouragingly, the median time to submit a first proposal has declined significantly—from 36.4 months in FY2021 to just 1.7 months in FY2025—reflecting improved engagement with funding opportunities. Additionally, the percentage of new PIs submitting to federal agencies within their first year has increased, highlighting a positive trend in early and strategic grant-seeking behavior.
+
+
+## Results:
+
+
+```{r}
+# Load Data:
+# Load Data Paths
+# Load Data:
+# Load Data Paths
+source("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Code/0_Data_Path_Configuration.R")
+source("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Code/1_Proposal_data_load_and_clean_from_Cayuse.R")
+source("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Code/2_Financial_data_load_and_clean_from_Wyocloud.R")
+source("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Code/3_Jami_List_Hire_Date_FSU.R")
+
+
+
+# After running above 3 services, we are getting mainly 2 Mother data sets.
+
+# Mother data 1: award_non_award
+# Mother data 2: pi_joining_date_and_funding
+# By PI we can join this two data.
+
+
+
+
+# Fixing PI names after manual checking:
+
+pi_joining_date_and_funding$PI <- ifelse(
+  pi_joining_date_and_funding$PI == "Anne Perry",
+  "Abby Anne Perry",
+  pi_joining_date_and_funding$PI
+)
+
+
+
+
+pi_joining_date_and_funding$PI <- ifelse(
+  pi_joining_date_and_funding$PI == "Irina Fay",
+  "Irina Holmes Fay",
+  pi_joining_date_and_funding$PI
+)
+
+
+
+award_non_award$PI <- ifelse(
+  award_non_award$PI == "Irina Fay",
+  "Irina Holmes Fay",
+  award_non_award$PI
+)
+
+
+
+
+
+
+
+
+
+results <- summarize_pi_funding_by_FY("FY2020", pi_joining_date_and_funding, award_non_award)
+results <- summarize_pi_funding_by_FY("FY2021", pi_joining_date_and_funding, award_non_award)
+results <- summarize_pi_funding_by_FY("FY2022", pi_joining_date_and_funding, award_non_award)
+results <- summarize_pi_funding_by_FY("FY2023", pi_joining_date_and_funding, award_non_award)
+results <- summarize_pi_funding_by_FY("FY2024", pi_joining_date_and_funding, award_non_award)
+results <- summarize_pi_funding_by_FY("FY2025", pi_joining_date_and_funding, award_non_award)
+```
+
+
+

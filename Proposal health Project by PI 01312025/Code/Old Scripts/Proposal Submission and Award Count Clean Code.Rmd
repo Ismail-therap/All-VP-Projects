@@ -1,0 +1,514 @@
+---
+title: "Proposal Submission and Winning Count by PI"
+author: "Md Ismail Hossain"
+date: "2025-02-25"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+
+# Proposal and award counting
+
+```{r}
+# Load Required Libraries
+library(readr)      # For reading CSV files
+library(dplyr)      # For data manipulation
+library(readxl)     # For reading Excel files
+library(lubridate)  # For handling date-time conversions
+library(stringr)    # For string operations
+library(tidyr)      # For reshaping data
+
+# 📌 Load Proposal Data
+proposal_data <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Cayuse Data/SP_Proposals_2025_Mar_19.csv")
+
+
+
+# proposal_data <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Cayuse Data/Proposal_Data_All_2025_02_26.csv")
+# 
+
+
+# 📌 Update Status based on Resolution Information
+proposal_data <- proposal_data %>%
+  mutate(Status = case_when(
+    Resolution == "PI Abandoned" & Status == "Closed" ~ "Not Submitted to Sponsor",
+    Resolution == "Not Funded" & Status == "Closed" ~ "Not Funded",
+    `Proposal Type` == "Transfer" & Status == "Funded" ~ "Transfer",
+    TRUE ~ Status
+  ))
+
+
+
+proposal_history_data <- proposal_data %>%
+  select(`Proposal #`, Status, `History Action`, `History Action Date`) %>%
+  group_by(`Proposal #`) %>%
+  fill(Status, .direction = "downup") %>%  # Fill down first, then up
+  ungroup() %>%
+  filter(Status %in% c("Submitted to Sponsor", "Under Consideration","Not Funded", "Funded"))
+
+
+
+############### Creating Actual_Submission_Date, Actual_Funding_Date ####
+library(dplyr)
+library(tidyr)
+
+
+# Step 1: Clean History Action Column
+proposal_history_data <- proposal_history_data %>%
+  mutate(
+    History_Action_Cleaned = gsub(".*: ", "", `History Action`)  # Extract text after ':'
+  )
+
+# Step 2: Create Unique Labels for Repeated History Actions
+proposal_history_data <- proposal_history_data %>%
+  group_by(`Proposal #`, History_Action_Cleaned) %>%
+  mutate(
+    Action_Count = row_number(), 
+    History_Action_Final = ifelse(Action_Count > 1, 
+                                  paste0(History_Action_Cleaned, "_", Action_Count), 
+                                  History_Action_Cleaned)
+  ) %>%
+  ungroup()
+
+# Step 3: Pivot to Wide Format
+proposal_wide <- proposal_history_data %>%
+  select(`Proposal #`, History_Action_Final, `History Action Date`) %>%
+  pivot_wider(
+    names_from = History_Action_Final,
+    values_from = `History Action Date`
+  )
+
+# Step 4: Add Any Remaining Information
+proposal_wide <- proposal_history_data %>%
+  select(`Proposal #`, Status) %>%
+  distinct() %>%
+  left_join(proposal_wide, by = "Proposal #")
+
+
+library(dplyr)
+library(lubridate)
+
+# Convert date columns to proper date format
+date_cols <- c(
+  "Approved to Submitted to Sponsor", "In Development to Submitted to Sponsor",
+  "Form was edited in 'Submitted to Sponsor' status", "In Development to Submitted to Sponsor_2",
+  "Approved to Submitted to Sponsor_2", "Under Review to Submitted to Sponsor",
+  "Under Review to Submitted to Sponsor_2", "Under Consideration to Submitted to Sponsor",
+  "Form was edited in 'Submitted to Sponsor' status_2"
+)
+
+funding_cols <- c(
+  "Submitted to Sponsor to Funded", "Form was edited in 'Funded' status",
+  "Under Consideration to Funded", "Funded (Project Complete)",
+  "Submitted to Sponsor to Funded_2"
+)
+
+# Step 1: Identify missing columns
+missing_date_cols <- setdiff(date_cols, names(proposal_wide))
+missing_funding_cols <- setdiff(funding_cols, names(proposal_wide))
+
+# Step 2: Filter out missing columns
+existing_date_cols <- intersect(date_cols, names(proposal_wide))
+existing_funding_cols <- intersect(funding_cols, names(proposal_wide))
+
+
+# Step 4: Convert only the existing date columns
+proposal_wide[existing_date_cols] <- lapply(proposal_wide[existing_date_cols], function(x) mdy_hms(x, tz = "America/Denver"))
+proposal_wide[existing_funding_cols] <- lapply(proposal_wide[existing_funding_cols], function(x) mdy_hms(x, tz = "America/Denver"))
+
+# Create Actual_Submission_Date (Latest Date)
+proposal_wide <- proposal_wide %>%
+  mutate(
+    Actual_Submission_Date = pmax(!!!syms(existing_date_cols), na.rm = TRUE),
+    Actual_Submission_Date = ifelse(is.infinite(Actual_Submission_Date), NA, Actual_Submission_Date)
+  )
+
+# Create Actual_Funding_Date (Latest Date)
+proposal_wide <- proposal_wide %>%
+  mutate(
+    Actual_Funding_Date = pmax(!!!syms(existing_funding_cols), na.rm = TRUE),
+    Actual_Funding_Date = ifelse(is.infinite(Actual_Funding_Date), NA, Actual_Funding_Date)
+  )
+
+# Display Result
+# Convert Unix Timestamps Back to Date Format
+proposal_wide <- proposal_wide %>%
+  mutate(
+    Actual_Submission_Date = as.POSIXct(Actual_Submission_Date, origin = "1970-01-01", tz = "America/Denver"),
+    Actual_Funding_Date = as.POSIXct(Actual_Funding_Date, origin = "1970-01-01", tz = "America/Denver")
+  )
+
+
+proposal_data_submission_funding_date <- proposal_wide  %>%
+  select(`Proposal #`,Actual_Submission_Date, Actual_Funding_Date)
+
+
+
+# Adding submission and Funding Date 
+proposal_data <- merge(proposal_data, proposal_data_submission_funding_date, by = "Proposal #")
+
+```
+
+
+```{r}
+
+proposal_cost_data <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Proposal_cost_data_all_2025_02_26.csv")
+
+# Rename columns in cost data (except "Proposal #") for clarity
+colnames(proposal_cost_data)[-1] <- paste0(colnames(proposal_cost_data)[-1], " in Proposal")
+
+# Merge Proposal Data with Cost Data on "Proposal #"
+proposal_data <- left_join(proposal_data, proposal_cost_data, by = "Proposal #")
+
+# 📌 Define columns to concatenate for history tracking
+concat_columns <- c("History Action", "History Action By", "History Action Date", 
+                    "History Comment", "Routing Comment", "Routing Date", "Routing Status")
+
+# Group data by "Proposal #" and concatenate relevant columns
+proposal_data <- proposal_data %>%
+  group_by(`Proposal #`) %>%
+  summarise(across(everything(), ~ if(all(is.na(.))) NA else paste(unique(na.omit(.)), collapse = " > "))) %>%
+  ungroup()
+
+
+# 📌 Convert "Actual_Submission_Date" to POSIXct and dynamically create Fiscal Year (FY)
+proposal_data <- proposal_data %>%
+  mutate(Actual_Submission_Date = as.POSIXct(Actual_Submission_Date, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")) %>%
+  mutate(FY = ifelse(!is.na(Actual_Submission_Date), 
+                     paste0("FY", year(Actual_Submission_Date) + ifelse(month(Actual_Submission_Date) >= 7, 1, 0)), 
+                     NA))
+```
+
+
+```{r}
+# 📌 Load Project Financial Summary Data
+project_financial_summary <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Project Financial Summary_Results_03192025.xlsx")
+
+# Update status to "Funded" if project exists in financial summary
+proposal_data$Status <- ifelse(proposal_data$`Project Title` %in% project_financial_summary$`Project Name`,
+                               "Funded", proposal_data$Status)
+
+# Clean and format "Project Number"
+proposal_data <- proposal_data %>%
+  mutate(`Project Number` = gsub("-", "", `Proposal #`),
+         `Project Number` = gsub("P", "A", `Project Number`))
+
+# 📌 Load Additional Financial Data for Indirect Costs
+project_information <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Project Information_Results till 022525.xlsx")
+
+# Merge Project Financial Summary with Indirect Cost Information
+project_financial_summary <- merge(project_financial_summary, project_information, by = "Project Number") %>%
+  select(`Project Number`, `Project Funding Amount`, `Award F&A Schedule`)
+
+# Merge Financial Data with Proposal Data
+award_non_award <- left_join(proposal_data, project_financial_summary, by = "Project Number") %>%
+  distinct()
+
+# 📌 Load and Merge College Name Data
+college_name_data <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Award External Funding By Dept_Details.xlsx")
+
+# Select and rename department information for merging
+college_name_data <- college_name_data %>%
+  select(`College (Subdivision)`, `Department (Organization)`) %>%
+  na.omit() %>%
+  rename(`PI Unit` = `Department (Organization)`)
+
+# Merge College Data with Proposals
+award_non_award <- left_join(award_non_award, college_name_data, by = "PI Unit") %>%
+  distinct()
+
+# Convert Status to Wide Format for better summarization
+award_status_wide <- award_non_award %>%
+  mutate(Status = as.character(Status)) %>%
+  select(`Proposal #`, `Status`) %>%
+  distinct() %>%
+  mutate(Value = 1) %>%
+  pivot_wider(names_from = Status, values_from = Value, values_fill = list(Value = 0))
+
+# Merge back with main dataset
+award_non_award <- left_join(award_non_award, award_status_wide, by = "Proposal #") %>%
+  mutate(Total_submitted_to_sponsor = `Submitted to Sponsor`+`Under Consideration`+ `Not Funded` + Funded ) %>%
+  arrange(`Project Title`, desc(`Created Date`)) %>%
+  distinct(`Project Title`, .keep_all = TRUE)
+
+# Removing rows where 'History Comment' contains 'test' or 'testing'
+award_non_award <- award_non_award[!grepl("test|testing", award_non_award$`History Comment`, ignore.case = TRUE), ]
+```
+
+
+
+
+```{r}
+# Save the full dataset as well
+write.csv(award_non_award, "C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Output/03192025/all_proposals_FY_updated_data_031925.csv", row.names = FALSE)
+
+```
+
+
+
+
+
+
+
+# PI's joining date and start up fund amount
+
+```{r}
+joining_date_data <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/WyoCloud Data/Employee Assignments and Positions_Details.xlsx")
+
+joining_date_only <- joining_date_data %>%
+  subset(select = c("Employee Name","Assignment Start Date"))
+
+colnames(joining_date_only)[1] <- "Project Manager"
+
+faculty_startup_fund_data <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/WyoCloud Data/Project Financial Summary_Results.xlsx")
+
+
+fund_by_project_manager <- faculty_startup_fund_data %>%
+  filter(`Project Organization` == "VP for Research & Economic Development Office") %>%
+  group_by(`Project Manager`) %>%
+  summarise(
+    Total_FSU = sum(`Project Funding Amount`)
+  ) 
+
+
+
+
+pi_joining_date_and_funding <- left_join(fund_by_project_manager, joining_date_only, by = "Project Manager")
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+# List of Project Managers
+project_managers <- c(
+  "Ahn, Juhyeon", "Aikens, Ellen", "Armstrong, Melanie", "Bailey, Ryan", 
+  "Barrile, Gabriel", "Bedford, Nicole", "Beiermann, Clint", "Bell, Jennifer", 
+  "Bernhardt, Natasha", "Bhattarai, Surendra", "Biasi, Joseph", "Bisha, Bledar", 
+  "Bock, Jarrod", "Borgholthaus, Cameron", "Brower, Alexandra", "Burgess, Matthew", 
+  "Burton, Peter", "Davidson, Curt", "Davis, Robert", "De Mello Tavares Lima, Paulo", 
+  "Demir, Aysegul", "Dittoe, Dana", "Dyett, Jordan", "Eidin, Emil", "Elokely, Khaled", 
+  "Encinger, Amy", "Evans, Alecia", "Field, Sean", "Forzan, Maria", "French, Alexander", 
+  "Gansauer, Grete", "Genoese, Francesca", "Germain, Sara", "Gilbert, Lauren", 
+  "Grogan, Kelly", "Groot, Koen", "Grover, Abhay", "Gulick, Eleanor", "Harrington, Erin", 
+  "Hawes, Jason", "Hayes, Lauren", "Holmes Fay, Irina", "Hunt, Tiffany", "Imhof, Michael", 
+  "Iqbal, Hasan", "Irisarri, Jorge", "James, Alexander", "Joyce, Meridith", "Kane, Sarah", 
+  "Koger, Benjamin", "Krause, Jennifer", "Kuper, Julie", "Leonard, Bryan", "Lewis, Madeline", 
+  "Li, Xuesong", "Macy, Marisa", "Maia Sabino, Roberta", "Majeed, Yaqoob", "Mann, Allison", 
+  "Matthews, Samuel", "McClure, Kenneth", "Moe, Maxwell", "Nowell, Stella", "Pascual, David", 
+  "Payne, Anna", "Perry, Anne", "Petrovic, Alexander", "Phalen, Hannah", "Phillips, Brittney", 
+  "Pinello, Jennifer", "Ragan, Izabela", "Rau, Daniel", "Saito, Masanori", "Sanders, Miriam", 
+  "Saxena, Ankit", "Schlomer, Matthew", "Shane-Nichols, Amy", 
+  "Sheshappanavar, Shivanand Venkanna", "Shukla, Rammohan", "Song, Yu", "Srednik, Mariela", 
+  "Suyama, Takashi", "Tatum, Garrett", "Taylor, Dane", "Taylor, Nicolina", 
+  "Tedmon-Jones, Tyler", "Tsai, Yu-Tsung", "Tuft, Alexander", "Vanderstichel, Raphael", 
+  "Walker, Ian", "Woodward, Richard", "Wor, Magdalena", "Yang, Xuhao", "Zhang, Ling"
+)
+
+
+# Format names as "First Name Last Name"
+formatted_names <- unname(sapply(project_managers, function(name) {
+  parts <- strsplit(name, ", ")[[1]]
+  paste(parts[2], parts[1])
+}))
+
+# Create name patterns
+first_names <- sapply(strsplit(formatted_names, " "), function(x) x[1])
+other_part <- sapply(strsplit(formatted_names, " "), function(x) x[2])
+name_patterns <- paste0(first_names, ".*", other_part)
+
+# Filter data and include matched pattern column
+filtered_award_non_award <- award_non_award %>%
+  mutate(
+    Matched_Pattern = sapply(PI, function(x) {
+      matched_pattern <- name_patterns[which(str_detect(x, name_patterns))]
+      if (length(matched_pattern) > 0) matched_pattern else NA
+    })
+  ) %>%
+  filter(!is.na(Matched_Pattern))  # Filter to include only matched entries
+
+
+
+filtered_award_non_award <- filtered_award_non_award %>%
+  mutate(`Project Manager` = str_replace(Matched_Pattern, "(.*)\\..*\\.(.*)", "\\2 \\1"))
+
+
+
+# Convert "Juhyeon.*Ahn" to "Ahn Juhyeon"
+filtered_award_non_award <- filtered_award_non_award %>%
+  mutate(`Project Manager` = str_replace(Matched_Pattern, "^(.*?)\\..*\\.(.*)$", "\\2 \\1"))
+
+
+
+# Correct Conversion to "Last First"
+filtered_award_non_award <- filtered_award_non_award %>%
+  mutate(`Project Manager` = str_replace(Matched_Pattern, "(.*)\\..*\\.(.*)", "\\2 \\1")) %>%
+  mutate(`Project Manager` = str_replace_all(`Project Manager`, "\\*", ""))  %>%  # Remove '*' from entries
+  mutate(`Project Manager` = str_replace_all(`Project Manager`, "\\.", " ")) 
+
+
+# Filter joining date and FSU for specific pi's
+
+
+filtered_pi_joining_funding <- pi_joining_date_and_funding %>%
+  filter(str_detect(`Project Manager`, paste(other_part, collapse = "|")))
+
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  filter(str_detect(`Project Manager`, paste(other_part, collapse = "|")))
+
+# Rename and rearrange columns
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  rename(
+    `Total Start Up Funds` = `Total_FSU`,
+    `Joining Date` = `Assignment Start Date`
+  ) %>%
+  select(`Project Manager`, `Joining Date`, `Total Start Up Funds`)
+
+
+
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  filter(`Project Manager` != "Pru, James")
+
+
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  mutate(`Project Manager` = str_replace(`Project Manager`, "^(.*),\\s*(.*)$", "\\2 \\1"))
+
+
+write.csv(filtered_pi_joining_funding, "C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Output/03192025/pi_joining_date_and_FSU_031925.csv", row.names = FALSE)
+```
+
+
+
+```{r}
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  mutate(`Project Manager` = case_when(
+    `Project Manager` == "Shivanand Venkanna Sheshappanavar" ~ "Shivanand Venkanna",
+    `Project Manager` == "Roberta Maia Sabino" ~ "Roberta Maia",
+    `Project Manager` == "Paulo De Mello Tavares Lima" ~ "Paulo De",
+    `Project Manager` == "Irina Holmes Fay" ~ "Irina Holmes",
+    TRUE ~ `Project Manager`  # Keep remaining names unchanged
+  ))
+
+
+filtered_pi_joining_funding <- left_join(filtered_award_non_award,filtered_pi_joining_funding,by="Project Manager")
+
+
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  mutate(`Total Start Up Funds` = format(`Total Start Up Funds`, scientific = FALSE))
+
+filtered_pi_joining_funding <- filtered_pi_joining_funding %>%
+  filter(!(Status == "Not Funded" & is.na(FY)))
+
+length(unique(filtered_pi_joining_funding$PI))
+
+write.csv(filtered_pi_joining_funding, "C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Output/03192025/filtered_award_non_award_with_FSU_031925.csv", row.names = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+library(stringr)
+library(dplyr)
+
+# Step 1: Extract First and Last Names from both arrays
+extract_names <- function(name) {
+  parts <- unlist(strsplit(name, " "))
+  if (length(parts) >= 2) {
+    return(paste(parts[1], parts[length(parts)]))  # Extract first and last names only
+  } else {
+    return(parts[1])  # Handle edge cases
+  }
+}
+
+# Extract clean first + last names
+pi_cleaned <- sapply(unique(filtered_pi_joining_funding_031925$PI), extract_names)
+formatted_cleaned <- sapply(formatted_names, extract_names)
+
+# Step 2: Identify differences
+# Names in PI but not in formatted_names
+pi_only <- setdiff(pi_cleaned, formatted_cleaned)
+
+# Names in formatted_names but not in PI
+formatted_only <- setdiff(formatted_cleaned, pi_cleaned)
+
+# Step 3: Display Results
+cat("Names in PI but not in formatted_names:\n")
+print(pi_only)
+
+cat("\nNames in formatted_names but not in PI:\n")
+print(formatted_only)
+
+
+
+pi_without_any_submission <- formatted_only[formatted_only != "Anne Perry"]
+
+# Convert to dataframe
+names_df <- data.frame(`Project Manager`= pi_without_any_submission)
+colnames(names_df)[1] <- "Project Manager"
+
+names_df_joining_date_FSU <- left_join(names_df,filtered_pi_joining_funding_031425,by = "Project Manager")
+
+
+
+
+# Save as CSV file
+write.csv(names_df_joining_date_FSU, "C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Output/03142025/pi_without_any_submission_031425.csv", row.names = FALSE)
+
+# length(unique(pi_without_any_submission))
+# setdiff(formatted_names,pi_without_any_submission)
+```
+
+
+
+
+
+
+
+
+```{r}
+
+
+
+
+write.csv(filtered_award_non_award_031225, "C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Output/filtered_award_non_award_031225.csv", row.names = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

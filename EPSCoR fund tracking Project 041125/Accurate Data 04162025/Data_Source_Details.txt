@@ -1,0 +1,52 @@
+NSF:
+======================================================================
+
+Total:
+
+https://tableau.external.nsf.gov/views/NSFbyNumbers/NumbersbyState?%3AisGuestRedirectFromVizportal=y&%3Aembed=y&%3Alinktarget=_blank&%3Atoolbar=top
+
+EPSCoR:
+
+# I download the data from: https://www.nsf.gov/awardsearch/advancedSearch.jsp
+# Filter: Organization == "University of Wyoming", State = "Wyoming", 
+# Element Code = 916800,915100,915000,721700,321Y00,270Y00,269Y00,196Y00,195Y00,194Y00,193Y00,078P00 [This are the codes for EPSCoR]
+
+
+USDA:
+=======================================================================
+
+https://www.nifa.usda.gov/data/nifa-dashboards/grant-funding-dashboard
+
+Total:
+
+Filter: State = Wyoming, Parent Recipient = University of Wyoming, FY = FY 2024
+
+EPSCoR (AFRI):
+
+I download the data using the filter above and then further filtering for,
+Assistance Listing Number = 10.310 - AGRICULTURE AND FOOD RESEARCH INITIATIVE (AFRI)
+
+to get the AFRI awards. 
+
+
+DOE
+==================================
+FY 24 Data link: https://science.osti.gov/-/media/_/excel/universities/SC-In-Your-State---FY-2024.xlsx
+
+FY 24 Dashboard link: https://science.osti.gov/Universities/interactive-grants-map/
+
+
+NIH
+================================
+
+Total FY 24: https://reporter.nih.gov/search/JbRgAtchAUKHOoW2X1vObQ/projects/map?fy=2024&org=UNIVERSITY%20OF%20WYOMING
+IDEea: https://www.nigms.nih.gov/Research/DRCB/dashboard/IDeA/state/WY
+
+
+NASA
+=================================
+Used the data from Shawna!
+
+
+
+

@@ -1,0 +1,263 @@
+---
+title: "Proposal and Winning for Specific PI"
+author: "Md Ismail Hossain"
+date: "2025-02-25"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading data
+
+# Step 1: Load Required Libraries
+
+
+```{r}
+# Load necessary libraries
+library(readr)      # For reading CSV files
+library(dplyr)      # For data manipulation
+library(readxl)     # For reading Excel files
+library(lubridate)  # For handling date-time conversions
+library(stringr)
+
+```
+
+# Step 2: Load and Process Proposal Data
+
+```{r}
+# Read the main Proposal Data file
+p_data <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Proposal_Data_All_2025_02_26.csv")
+
+# Read the Proposal Cost Data file
+Proposal_cost_data_all <- read_csv("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Proposal_cost_data_all_2025_02_26.csv") 
+
+# Rename columns (except "Proposal #") by appending "in Proposal"
+colnames(Proposal_cost_data_all)[-1] <- paste0(colnames(Proposal_cost_data_all)[-1], " in Proposal")
+
+# Merge Proposal Data with Proposal Cost Data on "Proposal #"
+p_data <- left_join(p_data, Proposal_cost_data_all, by = "Proposal #")
+
+
+
+# Define the columns that need concatenation
+concat_columns <- c("History Action", "History Action By", "History Action Date", 
+                    "History Comment", "Routing Comment","Routing Date" , "Routing Status")
+
+library(dplyr)
+
+
+# Group by "Proposal #" and collapse multiple rows into a single row
+p_data <- p_data %>%
+  group_by(`Proposal #`) %>%
+  summarise(across(everything(), ~ if(all(is.na(.))) NA else paste(unique(na.omit(.)), collapse = " > "))) %>%
+  ungroup()
+
+
+# Select relevant columns for further processing
+# p_data_selected_columns <- p_data %>%
+#   select(`Proposal #`, `Project Title`, `Created Date`, PI, `PI Unit`, 
+#          `History Action`, `History Action Date`, `Status`, 
+#          `Total Sponsor Costs in Proposal`, `Total Direct Costs in Proposal`, 
+#          `Total Indirect Costs in Proposal`, `Total Project Cost in Proposal`) %>%
+#   filter(!is.na(Status))  # Remove rows with missing Status
+# 
+
+
+
+```
+
+```{r}
+# Define the list of PIs and Departments to filter (for partial matches)
+pi_list <- c("Harrington", "Saito", "Sheshappanavar", "Tsai", "Pinello", 
+             "Chen", "Brandon L Roberts", "Swanner", "Haas", "Payne", "Gilbert")
+
+department_list <- c("Psychology", "Atmospheric Science", "Electrical Engineering", 
+                     "Physics & Astronomy", "Molecular Biology", "Plant Sciences",
+                     "Zoology & Physiology", "English", "Anthropology", 
+                     "School of Teacher Education", "Kinesiology & Health")
+
+# Filter the data using regular expressions (partial matches)
+filtered_p_data <- p_data %>%
+  filter(str_detect(PI, paste(pi_list, collapse = "|")) & 
+           (is.na(`PI Unit`) | str_detect(`PI Unit`, paste(department_list, collapse = "|"))))
+
+
+```
+
+
+```{r}
+p_data_selected_columns <- filtered_p_data %>%
+  mutate(`Created Date` = as.POSIXct(`Created Date`, format = "%m/%d/%Y %H:%M", tz = "UTC")) %>%
+  
+  # Add FY column based on fiscal year
+  mutate(FY = case_when(
+    `Created Date` >= as.POSIXct("2023-07-01", tz = "UTC") & `Created Date` < as.POSIXct("2024-07-01", tz = "UTC") ~ "FY24",
+    `Created Date` >= as.POSIXct("2024-07-01", tz = "UTC") ~ "FY25",
+    TRUE ~ NA_character_  # In case of missing or incorrect dates
+  ))
+
+# p_data_selected_columns <- filtered_p_data %>%
+#   select(`Proposal #`, `Project Title`, `Created Date`,FY, PI, `PI Unit`, 
+#          `History Action`, `History Action Date`, `Status`, 
+#          `Total Sponsor Costs in Proposal`, `Total Direct Costs in Proposal`, 
+#          `Total Indirect Costs in Proposal`, `Total Project Cost in Proposal`) %>%
+#   filter(!is.na(Status))  # Remove rows with missing Status
+
+
+
+```
+
+
+
+# Load the Project Financial Summary Table 
+
+
+```{r}
+# Making sure we got correct Funding status
+
+library(readxl)
+Project_Financial_Summary_Results_till_022525 <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Project Financial Summary_Results till 022525.xlsx")
+
+
+p_data_selected_columns$Status <- ifelse(p_data_selected_columns$`Project Title` %in% Project_Financial_Summary_Results_till_022525$`Project Name`,
+                                         "Funded",p_data_selected_columns$Status)
+
+
+
+p_data_selected_columns <- p_data_selected_columns %>%
+  mutate(`Project Number` = gsub("-", "", `Proposal #`),  # Remove all dashes
+         `Project Number` = gsub("P", "A", `Project Number`))  # Replace "P" with "A"
+
+```
+
+# Merging the indirect cost column with Financial Summary
+
+```{r}
+Project_Information_Results_till_022525 <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Project Information_Results till 022525.xlsx")
+project_fin_sum_with_indirect_cost <- merge(Project_Financial_Summary_Results_till_022525,Project_Information_Results_till_022525, by =  "Project Number")
+
+
+# Select only the required columns and then rename them
+project_fin_sum_with_indirect_cost <- project_fin_sum_with_indirect_cost %>%
+  select(
+    `Project Number`,
+    `Project Funding Amount`,
+    `Award F&A Schedule`
+  ) 
+
+
+
+```
+
+
+
+```{r}
+award_non_award <- left_join(p_data_selected_columns, project_fin_sum_with_indirect_cost, by = "Project Number") %>%
+  distinct()  # Remove duplicate rows
+
+```
+
+
+
+
+# Step 4: Load and Merge College Name Data
+
+```{r}
+# Read the College Name data from an Excel file
+college_name <- read_excel("C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Data/Award External Funding By Dept_Details.xlsx")
+
+# Select relevant columns and remove missing values
+college_name_only <- college_name %>%
+  select(`College (Subdivision)`, `Department (Organization)`) %>%
+  na.omit()
+
+# Rename "Department (Organization)" column to "PI Unit" for merging
+colnames(college_name_only)[2] <- "PI Unit"
+
+# Merge college name data with the award/non-award dataset on "PI Unit"
+award_non_award_with_college_name <- left_join(award_non_award,college_name_only, by = "PI Unit") %>%
+  distinct()  # Remove duplicate rows
+
+
+# Reorder columns
+# award_non_award_with_college_name <- award_non_award_with_college_name %>%
+#   select(
+#     `Proposal #`, `Project Title`, `Created Date`, `FY`, `PI`, 
+#     `College (Subdivision)`,  # Moving this before "PI Unit"
+#     `PI Unit`, `History Action`, `History Action Date`, `Status`, 
+#     `Total Sponsor Costs in Proposal`, `Total Direct Costs in Proposal`, 
+#     `Total Indirect Costs in Proposal`, `Total Project Cost in Proposal`, 
+#     `Project Number`, `Project Funding Amount`, `Award F&A Schedule`
+#   )
+
+
+# Remove duplicates, keeping only the latest "Created Date" for each "Project Title"
+
+
+
+
+library(dplyr)
+library(tidyr)
+
+# # Transform the data to wide format
+# award_non_award_wide <- award_non_award_with_college_name %>%
+#   mutate(Status = as.character(Status)) %>%  # Ensure Status is a character type
+#   select(`Proposal #`, `Status`) %>%
+#   distinct() %>%  # Remove duplicates if any
+#   mutate(Value = 1) %>%  # Create a column to indicate presence
+#   pivot_wider(names_from = Status, values_from = Value, values_fill = list(Value = 0))
+# 
+# # Merge back with the original dataset
+# award_non_award_final <- award_non_award_with_college_name %>%
+#   left_join(award_non_award_wide, by = "Proposal #")
+# 
+# # View the transformed data
+# View(award_non_award_final)
+
+summary_data <- award_non_award_with_college_name %>%
+  group_by(PI, FY) %>%
+  summarise(
+    Total_Proposals_Submitted = sum(Status == "Submitted to Sponsor", na.rm = TRUE),
+    Total_Proposals_Funded = sum(Status == "Funded", na.rm = TRUE),
+    Total_Funding_Amount = sum(`Project Funding Amount`[Status == "Funded"], na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+
+library(dplyr)
+
+# Update Status based on Resolution
+award_non_award_with_college_name <- award_non_award_with_college_name %>%
+  mutate(Status = ifelse(Resolution == "PI Abandoned" & Status == "Closed", 
+                         "Not Submitted to Sponsor", 
+                         Status))
+
+award_non_award_with_college_name <- award_non_award_with_college_name %>%
+  mutate(Status = ifelse(Resolution == "Not Funded" & Status == "Closed", 
+                         "Submitted to Sponsor", 
+                         Status))
+
+award_non_award_wide <- award_non_award_with_college_name %>%
+  mutate(Status = as.character(Status)) %>%  # Ensure Status is a character type
+  select(`Proposal #`, `Status`) %>%
+  distinct() %>%  # Remove duplicates if any
+  mutate(Value = 1) %>%  # Create a column to indicate presence
+  pivot_wider(names_from = Status, values_from = Value, values_fill = list(Value = 0))
+
+# Merge back with the original dataset
+award_non_award_final <- award_non_award_with_college_name %>%
+  left_join(award_non_award_wide, by = "Proposal #")
+award_non_award_final$Total_submitted_to_sponsor <- award_non_award_final$`Submitted to Sponsor`+ award_non_award_final$Funded
+
+award_non_award_final <- award_non_award_final %>%
+  arrange(`Project Title`, desc(`Created Date`)) %>%  # Sort by "Project Title" and latest "Created Date"
+  distinct(`Project Title`, .keep_all = TRUE)  # Keep only the first occurrence (latest one)
+
+
+# View the filtered data
+write.csv(award_non_award_final,"C:/Users/mhossa11/OneDrive - University of Wyoming/Projects/Proposal health Project by PI 01312025/Output/specific_pi_filtered_FY24_FY25_022625_updated_data_till_022625.csv",row.names = FALSE)
+
+
+```

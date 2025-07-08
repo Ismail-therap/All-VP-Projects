@@ -1,0 +1,593 @@
+---
+title: "Proposal Submission Tracking"
+author: "Md Ismail Hossain"
+date: "2025-02-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+\newpage
+
+# Loading proposal data
+
+```{r}
+library(readr)
+library(dplyr)
+p_data <- read_csv("Data/Proposal_Data_All_2025_01_31(in).csv")
+Proposal_cost_data_all <- read_csv("Data/Proposal_cost_data_all.csv")
+Proposal_cost_data_all <- Proposal_cost_data_all %>%
+  select(-`Project Title`)
+
+colnames(Proposal_cost_data_all)[-1] <- paste0(colnames(Proposal_cost_data_all)[-1], " in Proposal")
+
+
+
+p_data <- merge(p_data,Proposal_cost_data_all,by = "Proposal #")
+
+
+
+
+
+p_data_selected_columns <- p_data %>%
+  select(`Proposal #`, `Project Title`,`Created Date`, PI, `PI Unit`,`History Action`,`History Action Date`,`Status`,`Total Sponsor Costs in Proposal`,`Total Direct Costs in Proposal`,`Total Indirect Costs in Proposal`,`Total Project Cost in Proposal`)
+
+
+
+p_data_selected_columns <- p_data_selected_columns %>%
+  filter(!is.na(Status))
+
+
+
+
+p_data_processed <- p_data_selected_columns %>%
+  group_by(`Proposal #`, `Project Title`,`Created Date`, PI, `PI Unit`,`Status`,`Total Sponsor Costs in Proposal`,`Total Direct Costs in Proposal`,`Total Indirect Costs in Proposal`,`Total Project Cost in Proposal`) %>%
+  summarize(
+        `Proposal Created Date` = ifelse(any(grepl("Proposal Created", `History Action`)),
+                               max(`History Action Date`[grepl("Proposal Created", `History Action`)], na.rm = TRUE),
+                               NA),
+    `Submission Date` = ifelse(any(grepl("Approved to Submitted to Sponsor", `History Action`)),
+                               max(`History Action Date`[grepl("Approved to Submitted to Sponsor", `History Action`)], na.rm = TRUE),
+                               NA),
+    `Funded Date` = ifelse(any(grepl("Submitted to Sponsor to Funded", `History Action`)),
+                            max(`History Action Date`[grepl("Submitted to Sponsor to Funded", `History Action`)], na.rm = TRUE),
+                            NA)
+  ) %>%
+  ungroup()
+
+
+View(p_data_processed)
+```
+
+
+# Proposal data processing
+
+```{r}
+# Filter out records where Status is Closed
+# p_data_filtered <- p_data %>%
+#    filter(Status != "Closed")
+
+# Process data to extract submission and funded dates
+# p_data_processed <- p_data %>%
+#   group_by(`Proposal #`, `Project Title`, PI, `PI Unit`) %>%
+#   summarize(
+#         `Proposal Created Date` = ifelse(any(grepl("Proposal Created", `History Action`)), 
+#                                max(`History Action Date`[grepl("Proposal Created", `History Action`)], na.rm = TRUE), 
+#                                NA),
+#     `Submission Date` = ifelse(any(grepl("Approved to Submitted to Sponsor", `History Action`)), 
+#                                max(`History Action Date`[grepl("Approved to Submitted to Sponsor", `History Action`)], na.rm = TRUE), 
+#                                NA),
+#     `Funded Date` = ifelse(any(grepl("Submitted to Sponsor to Funded", `History Action`)), 
+#                             max(`History Action Date`[grepl("Submitted to Sponsor to Funded", `History Action`)], na.rm = TRUE), 
+#                             NA)
+#   ) %>%
+#   ungroup()
+# 
+# 
+# 
+# 
+# p_data_processed_cleaned  <- p_data_processed %>%
+#   filter(!if_all(c("Project Title", "PI", "PI Unit","Proposal Created Date","Submission Date", "Funded Date"), is.na))
+# 
+# 
+# 
+# clean_proposals_data <- p_data_processed_cleaned %>%
+#   group_by(`Proposal #`) %>%
+#   summarise(
+#     `Project Title` = coalesce(`Project Title`[!is.na(`Project Title`)][1], NA_character_),
+#     PI = coalesce(PI[!is.na(PI)][1], NA_character_),
+#     `PI Unit` = coalesce(`PI Unit`[!is.na(`PI Unit`)][1], NA_character_),
+#     `Proposal Created Date` = coalesce(`Proposal Created Date`[!is.na(`Proposal Created Date`)][1], NA_character_),
+#     `Submission Date` = coalesce(`Submission Date`[!is.na(`Submission Date`)][1], NA_character_),
+#     `Funded Date` = coalesce(`Funded Date`[!is.na(`Funded Date`)][1], NA_character_)
+#   )
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# clean_proposals_data$`Award #` <- gsub("P", "A", clean_proposals_data$`Proposal #`)
+
+
+
+
+```
+
+
+
+
+
+# Award data processing and merging
+
+```{r}
+library(readr)
+a_data <- read_csv("Data/Award_Data_All_2025_01_31(in).csv")
+
+Award_cost_data_all <- read_csv("Data/Award_cost_data_all.csv")
+Award_cost_data_all <- Award_cost_data_all %>%
+  select(-`Project Title` )
+colnames(Award_cost_data_all)[-1] <- paste0(colnames(Award_cost_data_all)[-1], " in Award Data")
+
+
+a_data <- merge(a_data,Award_cost_data_all,by = "Award #")
+
+colnames(a_data$pr)
+
+a_data_selected_columns <- a_data %>%
+  select(`Award #`, `Project Title`, PI, `Admin Unit`,`Status`,`Obligated Amount in Award Data`, 
+           `Total Expected Amount in Award Data`, 
+           `Direct Costs in Award Data`, 
+           `expected direct in Award Data`, 
+           `expected indirect in Award Data`, 
+           `Indirect Costs in Award Data`, 
+           `Total Project Cost in Award Data`)
+
+a_data_selected_columns <- a_data_selected_columns %>%
+  filter(!is.na(Status))
+
+colnames(a_data_selected_columns)[5] <- "Status_after_award"
+
+
+#common_award_title <- intersect(p_data_selected_columns$`Project Title`, a_data_selected_columns$`Project Title`)
+a_data_selected_columns$`Proposal #` <- gsub("A", "P", a_data_selected_columns$`Award #`)
+common_award_id <- intersect(p_data_processed$`Proposal #`, a_data_selected_columns$`Proposal #`)
+
+
+# Perform a left join by "Proposal #"
+award_non_award <- p_data_processed %>%
+  left_join(a_data_selected_columns, by = "Proposal #")
+
+
+
+# View(a_data_selected_columns)
+# 
+# a_data_processed <- a_data %>%
+#   group_by(`Award #`, `Project Title`, PI, `PI Unit`) %>%
+#   summarize(
+#     `Award Created Date` = ifelse(any(grepl("Award Created", `History Action`)), 
+#                                max(`History Action Date`[grepl("Award Created", `History Action`)], na.rm = TRUE), 
+#                                NA),
+#         `Award Active Date` = ifelse(any(grepl("Status was changed from: In Review & Negotiation to Active", `History Action`)), 
+#                                max(`History Action Date`[grepl("Status was changed from: In Review & Negotiation to Active", `History Action`)], na.rm = TRUE),  NA)
+#   ) %>%
+#   ungroup()
+# 
+# a_data_processed_cleaned  <- a_data_processed %>%
+#   filter(!if_all(c("Project Title", "PI", "PI Unit","Award Created Date","Award Active Date"), is.na))
+# 
+# 
+# 
+# clean_awards_data <- a_data_processed_cleaned %>%
+#   group_by(`Award #`) %>%
+#   summarise(
+#     `Project Title` = coalesce(`Project Title`[!is.na(`Project Title`)][1], NA_character_),
+#     PI = coalesce(PI[!is.na(PI)][1], NA_character_),
+#     `PI Unit` = coalesce(`PI Unit`[!is.na(`PI Unit`)][1], NA_character_),
+#     `Award Created Date` = coalesce(`Award Created Date`[!is.na(`Award Created Date`)][1], NA_character_),
+#     `Award Active Date` = coalesce(`Award Active Date`[!is.na(`Award Active Date`)][1], NA_character_)
+#   )
+# 
+# 
+# dim(clean_awards_data)
+# length(unique(clean_awards_data$`Award #`))
+```
+
+
+# College name data processing and merging
+
+
+```{r}
+library(readxl)
+college_name <- read_excel("Data/Award External Funding By Dept_Details.xlsx")
+
+college_name_only <- college_name %>%
+  select(`College (Subdivision)`,`Department (Organization)`)
+college_name_only <- na.omit(college_name_only)
+colnames(college_name_only)[2] <- c("PI Unit")
+
+
+
+award_non_award_with_college_name <- merge(college_name_only,award_non_award,by="PI Unit")
+award_non_award_with_college_name <- award_non_award_with_college_name %>%
+  distinct()
+
+
+dim(award_non_award_with_college_name)
+```
+
+
+
+
+
+
+```{r}
+
+# Convert 'Proposal Created Date' to Date format
+
+award_non_award_with_college_name <- award_non_award_with_college_name %>%
+  mutate(`Proposal Created Date` = as.Date(`Created Date`, format = "%Y-%m-%d"))
+
+
+View(award_non_award_with_college_name)
+# Filter data for dates between January 1, 2024, and December 31, 2024
+award_non_award_with_college_name_JAN_2014_DEC_2024 <- award_non_award_with_college_name %>%
+  filter(`Proposal Created Date` >= as.Date("2024-01-01") & `Proposal Created Date` <= as.Date("2024-12-31"))
+
+table(award_non_award_with_college_name_JAN_2014_DEC_2024$Status)
+
+write.csv(award_non_award_with_college_name_JAN_2014_DEC_2024,"Proposal_and_Money_data_JAN_2014_DEC_2024.csv",row.names = FALSE)
+
+```
+
+
+
+
+
+
+
+
+
+
+# Merge Proposal and Award data
+
+```{r}
+
+# # Find common "Award #" values
+# common_award_title <- intersect(clean_proposals_data$`Project Title`, clean_awards_data$`Project Title`)
+# common_award_id <- intersect(clean_proposals_data$`Award #`, clean_awards_data$`Award #`)
+# # Remove rows where "Award #" is in common_award_id
+# clean_proposals_data_not_awarded <- clean_proposals_data %>%
+#   filter(!(`Project Title` %in% common_award_title))
+# 
+# clean_proposals_data_not_awarded <- clean_proposals_data_not_awarded %>%
+#    filter(!(`Award #` %in% common_award_id))
+# dim(clean_proposals_data_not_awarded)
+# 
+# clean_proposals_data_not_awarded$Proposal_status <- ifelse(!is.na(clean_proposals_data_not_awarded$`Funded Date`), 
+#                                                            "Funded", 
+#                                                            "Not Funded Yet")
+# 
+# clean_proposals_data_not_awarded <- clean_proposals_data_not_awarded %>%
+#   select(-`Award #`)
+# 
+# 
+# colnames(clean_proposals_data_not_awarded)
+
+```
+
+
+```{r}
+# clean_proposals_data_awarded <- merge( clean_proposals_data,clean_awards_data,by = "Award #")
+# dim(clean_proposals_data_awarded)
+# 
+# clean_proposals_data_awarded <- clean_proposals_data_awarded %>%
+#   select(`Proposal #`,`Project Title.y`,PI.y,`PI Unit.y`,`Proposal Created Date`,`Submission Date`,`Funded Date`,`Award Created Date`,`Award Active Date`)
+# 
+# clean_proposals_data_awarded$`Funded Date` <- ifelse(is.na(clean_proposals_data_awarded$`Funded Date`),clean_proposals_data_awarded$`Award Active Date`,clean_proposals_data_awarded$`Funded Date`)
+# 
+# clean_proposals_data_awarded$Proposal_status <- "Funded"
+# 
+# clean_proposals_data_awarded <- clean_proposals_data_awarded %>%
+#   select(`Proposal #`,`Project Title.y`,PI.y,`PI Unit.y`,`Proposal Created Date`,`Submission Date`,`Funded Date`,Proposal_status)
+# 
+# 
+# 
+# colnames(clean_proposals_data_awarded) <- colnames(clean_proposals_data_not_awarded)
+# colnames(clean_proposals_data_awarded)
+# 
+# 
+# length(unique(clean_proposals_data_awarded$`Proposal #`))
+
+```
+
+
+
+```{r}
+
+library(dplyr)
+library(lubridate)
+
+# Convert 'Proposal Created Date' to Date format
+award_non_award$`Proposal Created Date` <- as.Date(award_non_award$`Proposal Created Date`, format="%m/%d/%Y")
+
+# Extract Year and Month separately
+award_non_award$Year <- format(award_non_award$`Proposal Created Date`, "%Y")
+award_non_award$Month <- format(award_non_award$`Proposal Created Date`, "%B")
+
+library(readxl)
+college_name <- read_excel("Data/Award External Funding By Dept_Details.xlsx")
+
+college_name_only <- college_name %>%
+  select(`College (Subdivision)`,`Department (Organization)`)
+college_name_only <- na.omit(college_name_only)
+colnames(college_name_only)[2] <- c("PI Unit")
+
+
+
+award_non_award_with_college_name <- merge(college_name_only,award_non_award,by="PI Unit")
+award_non_award_with_college_name <- award_non_award_with_college_name %>%
+  distinct()
+
+
+
+award_non_award_with_college_name <- merge(award_non_award_with_college_name,proposal_status,by = "Proposal #")
+
+
+
+
+award_non_award_with_college_name$Proposal_status <- ifelse(award_non_award_with_college_name$Proposal_status != "Funded",award_non_award_with_college_name$Status,award_non_award_with_college_name$Proposal_status)
+
+
+
+
+```
+
+
+
+# Data saving for reporitng
+
+```{r}
+# Convert 'Proposal Created Date' to Date format
+award_non_award_with_college_name <- award_non_award_with_college_name %>%
+  mutate(`Proposal Created Date` = as.Date(`Proposal Created Date`, format = "%Y-%m-%d"))
+
+# Filter data for dates between January 1, 2024, and December 31, 2024
+award_non_award_with_college_name_JAN_2014_DEC_2024 <- award_non_award_with_college_name %>%
+  filter(`Proposal Created Date` >= as.Date("2024-01-01") & `Proposal Created Date` <= as.Date("2024-12-31"))
+
+table(award_non_award_with_college_name_JAN_2014_DEC_2024$Status)
+
+write.csv(award_non_award_with_college_name_JAN_2014_DEC_2024,"Proposal_and_Money_data_JAN_2014_DEC_2024.csv",row.names = FALSE)
+
+View(award_non_award_with_college_name_JAN_2014_DEC_2024)
+
+
+dim(award_non_award_with_college_name_JAN_2014_DEC_2024)
+# Data I am reporting to Dr. Parag is just a pivot table from this award_non_award_with_college_name_JAN_2014_DEC_2024 data.
+```
+
+
+
+
+# This part of the analysis not necessary. 
+
+```{r}
+View(head(award_non_award))
+# Summarize data by Year, Month, and PI Unit
+summary_df <- award_non_award %>%
+  group_by(Year, Month, `PI Unit`) %>%
+  summarise(
+    `Number of Proposal Submitted` = n(),
+    `Number of Proposal Funded` = sum(Proposal_status == "Funded", na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+# View summarized data
+write.csv(summary_df,"Final_summarized_data.csv",row.names = FALSE)
+
+
+colnames(summary_df)
+```
+
+
+# Get the College name
+
+```{r}
+library(readxl)
+college_name <- read_excel("Data/Award External Funding By Dept_Details.xlsx")
+head(college_name$`Department (Organization)`)
+
+college_name_only <- college_name %>%
+  select(`College (Subdivision)`,`Department (Organization)`)
+college_name_only <- na.omit(college_name_only)
+colnames(college_name_only)[2] <- c("PI Unit")
+
+
+
+summary_df_with_college_name <- merge(college_name_only,summary_df,by="PI Unit")
+summary_df_with_college_name <- summary_df_with_college_name %>%
+  distinct()  # Removes exact duplicate rows
+
+# Reorder columns
+summary_df_with_college_name <- summary_df_with_college_name %>%
+  select(`College (Subdivision)`, `PI Unit`, Year, Month, 
+         `Number of Proposal Submitted`, `Number of Proposal Funded`) 
+
+# Rename "PI Unit" to "Department"
+summary_df_with_college_name <- summary_df_with_college_name %>%
+  rename(Department = `PI Unit`)
+
+# View the updated dataframe
+View(summary_df_with_college_name)
+
+summary_df_with_college_name <- summary_df_with_college_name %>%
+  mutate(MonthOrder = case_when(
+    Month == "January" ~ 1,
+    Month == "February" ~ 2,
+    Month == "March" ~ 3,
+    Month == "April" ~ 4,
+    Month == "May" ~ 5,
+    Month == "June" ~ 6,
+    Month == "July" ~ 7,
+    Month == "August" ~ 8,
+    Month == "September" ~ 9,
+    Month == "October" ~ 10,
+    Month == "November" ~ 11,
+    Month == "December" ~ 12
+  ))
+
+
+
+write.csv(summary_df_with_college_name,"Final_summarized_data_with_college_name.csv",row.names = FALSE)
+```
+
+
+# Summarizing the data
+
+```{r}
+# Summarizing data by PI Unit
+summary_by_pi_unit <- summary_df_with_college_name %>%
+  group_by(`College (Subdivision)`,Department) %>%
+  summarise(
+    Total_Proposals_Submitted = sum(`Number of Proposal Submitted`, na.rm = TRUE),
+    Total_Proposals_Funded = sum(`Number of Proposal Funded`, na.rm = TRUE),
+    Funding_Rate = (Total_Proposals_Funded / Total_Proposals_Submitted) * 100,
+    .groups = "drop"
+  )
+write.csv(summary_by_pi_unit,"summary_by_pi_unit.csv",row.names = FALSE)
+
+View(summary_by_pi_unit)
+
+
+summary_by_college <- summary_df_with_college_name %>%
+  group_by(`College (Subdivision)`) %>%
+  summarise(
+    Total_Proposals_Submitted = sum(`Number of Proposal Submitted`, na.rm = TRUE),
+    Total_Proposals_Funded = sum(`Number of Proposal Funded`, na.rm = TRUE),
+    Funding_Rate = Total_Proposals_Funded / Total_Proposals_Submitted * 100
+  )
+
+write.csv(summary_by_college,"summary_by_college.csv",row.names = FALSE)
+
+```
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)  
+
+# Transform the data into long format for multiple lines in the plot
+summary_long_year <- summary_df_with_college_name %>%
+  select(Year, `Number of Proposal Submitted`, `Number of Proposal Funded`) %>%
+  pivot_longer(cols = c(`Number of Proposal Submitted`, `Number of Proposal Funded`), 
+               names_to = "Proposal Type", values_to = "Count")
+
+# Multiple line plot with improved text readability (for Year)
+ggplot(summary_long_year, aes(x = as.factor(Year), y = Count, color = `Proposal Type`, group = `Proposal Type`)) +
+  geom_line(stat = "summary", fun = sum, size = 1.5) +  # Thicker lines
+  geom_point(stat = "summary", fun = sum, size = 4) +  # Bigger data points
+  stat_summary(geom = "label", fun = sum, aes(label = ..y..), 
+               size = 4, fill = "white", label.size = 0.2, position = position_nudge(y = 20)) +  # Labels with background
+  labs(title = "Proposals Submitted and Funded Per Year", 
+       x = "Year", 
+       y = "Number of Proposals", 
+       color = "Proposal Type") +
+  theme_minimal() +
+  theme(legend.position = "right", 
+        axis.text.x = element_text(size = 12),  # Bigger x-axis labels
+        axis.text.y = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 14, face = "bold"))  # Bigger title
+
+```
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)  
+
+# Transform the data into long format for multiple lines in the plot
+summary_long_month <- summary_df_with_college_name %>%
+  select(Month, `Number of Proposal Submitted`, `Number of Proposal Funded`) %>%
+  pivot_longer(cols = c(`Number of Proposal Submitted`, `Number of Proposal Funded`), 
+               names_to = "Proposal Type", values_to = "Count")
+
+# Define month order for correct chronological order
+month_levels <- c("January", "February", "March", "April", "May", "June", "July", 
+                  "August", "September", "October", "November", "December")
+
+summary_long_month$Month <- factor(summary_long_month$Month, levels = month_levels)
+
+# Multiple line plot with improved text readability
+ggplot(summary_long_month, aes(x = Month, y = Count, color = `Proposal Type`, group = `Proposal Type`)) +
+  geom_line(stat = "summary", fun = sum, size = 1.5) +  # Thicker lines
+  geom_point(stat = "summary", fun = sum, size = 4) +  # Bigger data points
+  stat_summary(geom = "label", fun = sum, aes(label = ..y..), 
+               size = 4, fill = "white", label.size = 0.2, position = position_nudge(y = 20)) +  # Label with background
+  labs(title = "Proposals Submitted and Funded Per Month", 
+       x = "Month", 
+       y = "Number of Proposals", 
+       color = "Proposal Type") +
+  theme_minimal() +
+  theme(legend.position = "right", 
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 12),  # Larger rotated x-axis labels
+        axis.text.y = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 14, face = "bold"))  # Bigger title
+
+```
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Define correct month order for sorting
+month_levels <- c("January", "February", "March", "April", "May", "June", "July", 
+                  "August", "September", "October", "November", "December")
+
+# Ensure Month follows chronological order within each year
+summary_df_with_college_name$Month <- factor(summary_df_with_college_name$Month, levels = month_levels)
+
+# Create a proper Year-Month format for correct sorting
+summary_df_with_college_name <- summary_df_with_college_name %>%
+  mutate(`Year-Month` = factor(paste(Year, Month, sep = "-"), 
+                               levels = unique(paste(Year, Month, sep = "-")))) %>%
+  arrange(Year, Month)  # Sort by Year and Month
+
+# Transform data into long format for plotting multiple lines
+summary_long_year_month <- summary_df_with_college_name %>%
+  select(`Year-Month`, `Number of Proposal Submitted`, `Number of Proposal Funded`) %>%
+  pivot_longer(cols = c(`Number of Proposal Submitted`, `Number of Proposal Funded`), 
+               names_to = "Proposal Type", values_to = "Count")
+
+# Multiple line plot for Year-Month (sorted correctly)
+ggplot(summary_long_year_month, aes(x = `Year-Month`, y = Count, color = `Proposal Type`, group = `Proposal Type`)) +
+  geom_line(stat = "summary", fun = sum, size = 1.5) +  # Thicker lines
+  geom_point(stat = "summary", fun = sum, size = 4) +  # Bigger data points
+  stat_summary(geom = "label", fun = sum, aes(label = ..y..), 
+               size = 4, fill = "white", label.size = 0.2, position = position_nudge(y = 20)) +  # Labels with background
+  labs(title = "Proposals Submitted and Funded Per Year-Month", 
+       x = "Year-Month", 
+       y = "Number of Proposals", 
+       color = "Proposal Type") +
+  theme_minimal() +
+  theme(legend.position = "right", 
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 10),  # Rotate and adjust x-axis labels
+        axis.text.y = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 14, face = "bold"))
+
+```
+
+
